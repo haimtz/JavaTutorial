@@ -44,7 +44,6 @@ public class User {
 	}
 	
 	// Equal override
-
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
