@@ -1,6 +1,8 @@
 package model;
 
-public class User {
+import java.io.Serializable;
+
+public class User implements Serializable{
 	
 	// Members
 	private String Name;
@@ -9,8 +11,22 @@ public class User {
 	private String Tel;
 	private String Password;
 	
+	//Contractor
+	public User()
+	{
+		
+	}
 	
-	
+	// TODO delete this and fix to full arguments
+	public User(String name, String idNumber, String password) {
+		super();
+		Name = name;
+		IdNumber = idNumber;
+		Password = password;
+	}
+
+
+
 	// Getters and Setters
 	public String getName() {
 		return Name;
