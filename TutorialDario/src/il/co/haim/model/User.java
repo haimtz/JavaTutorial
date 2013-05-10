@@ -9,6 +9,8 @@ public class User {
 	private String Password;
 	
 	
+	
+	// Getters and Setters
 	public String getName() {
 		return Name;
 	}
