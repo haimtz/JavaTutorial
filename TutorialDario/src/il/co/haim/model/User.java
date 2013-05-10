@@ -2,6 +2,7 @@ package il.co.haim.model;
 
 public class User {
 	
+	// Members
 	private String Name;
 	private String IdNumber;
 	private String Email;
