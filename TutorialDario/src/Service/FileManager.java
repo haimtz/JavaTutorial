@@ -2,6 +2,8 @@ package Service;
 
 import java.io.*;
 
+import model.*;
+
 public class FileManager 
 {	
 	private final String FILE_NAME;
@@ -11,6 +13,13 @@ public class FileManager
 		FILE_NAME = fileName;
 	}
 	
+	
+	/***
+	 * write the object into file
+	 * @param obj
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 */
 	public void writeObject(Object obj) throws FileNotFoundException, IOException
 	{
 		// check if object is null
@@ -21,6 +30,8 @@ public class FileManager
 		
 		try{
 			outputObj = new ObjectOutputStream(new FileOutputStream(FILE_NAME));
+			outputObj.writeObject(obj);
+			outputObj.close();
 			
 		}
 		catch(Exception ex)
@@ -29,6 +40,26 @@ public class FileManager
 		}
 		
 	}
+	
+	public < T extends User >  T readObject() throws FileNotFoundException, IOException, ClassNotFoundException
+	{
+		T obj;
+		
+		try{
+			ObjectInputStream inputObj = new ObjectInputStream(new FileInputStream(FILE_NAME));
+			obj = (T)inputObj.readObject();
+			return obj;
+			
+		}
+		catch(FileNotFoundException ex)
+		{
+			
+		}
+		finally{
+			return null;
+		}
+	}
+	
 	
 	/***
 	 * check if the file is existing 
