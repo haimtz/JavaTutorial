@@ -43,21 +43,29 @@ public class FileManager
 	
 	public < T extends User >  T readObject() throws FileNotFoundException, IOException, ClassNotFoundException
 	{
-		T obj;
+		T obj = null;
+		ObjectInputStream inputObj;
 		
 		try{
-			ObjectInputStream inputObj = new ObjectInputStream(new FileInputStream(FILE_NAME));
-			obj = (T)inputObj.readObject();
-			return obj;
+			inputObj = new ObjectInputStream(new FileInputStream(FILE_NAME));
+			
+			while(true)
+			{
+				obj = (T)inputObj.readObject();
+				inputObj.close();
+			}
+			
+		}
+		catch (EOFException endOfFileException )
+		{
 			
 		}
 		catch(FileNotFoundException ex)
 		{
-			
-		}
-		finally{
 			return null;
 		}
+		
+		return obj;
 	}
 	
 	
