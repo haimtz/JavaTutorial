@@ -37,7 +37,6 @@ public class FileManager
 		}
 		catch(Exception ex)
 		{
-			//TODO throw exception
 		}
 		
 	}
@@ -61,7 +60,7 @@ public class FileManager
 		}
 		catch(FileNotFoundException ex)
 		{
-			return null;
+			return obj;
 		}
 		
 		
@@ -73,7 +72,7 @@ public class FileManager
 	 * check if the file is existing 
 	 * @return true/false
 	 */
-	private boolean isExistingFile()
+	public boolean isExistingFile()
 	{
 		File myFile = new File(FILE_NAME);
 		if(myFile.exists())

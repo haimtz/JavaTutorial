@@ -3,14 +3,27 @@ package GUI;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 import javax.swing.*;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.GroupLayout.Group;
 
+import ProjectException.InvalidEmailAddressException;
+import ProjectException.InvalidTelNumberFormatException;
+import ProjectException.InvalidUserException;
+import ProjectException.InvalidUserIDException;
+import Service.Validator;
+
+import model.DBUsers;
+import model.User;
+
 public class MainForm extends JFrame {
 	
 	private GroupLayout layout;
+	private DBUsers DbUsers;
+	
 	// define Labels
 	private JLabel lblConfirmPass;
     private JLabel lblEmail;
@@ -32,14 +45,21 @@ public class MainForm extends JFrame {
     private JButton butClose;
     private JButton butCreate;
     
-	public MainForm()
+	public MainForm(DBUsers users)
 	{
 		super("Add USer");
+		DbUsers = users;
 		layout = new GroupLayout(getContentPane());
 		getContentPane().setLayout(layout);
 		
 		init();
 		setComponents();
+		
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		setSize(400, 600);
+		setVisible(true);
+		pack();
+		
 	}
 	
 	private void init()
@@ -146,15 +166,59 @@ public class MainForm extends JFrame {
 
 	private class ButtonHandler implements ActionListener
 	{
-
+		private User newUser;
 		@Override
 		public void actionPerformed(ActionEvent event) {
 			
 			if(event.getActionCommand() == "Close")
+			{
+				try {
+					saveUser();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				dispose();
+			}
 			
 			if(event.getActionCommand() == "Create")
-				JOptionPane.showMessageDialog(MainForm.this, "Click by CREATE");
+			{
+				newUser = new User();
+				CreateUser();
+				try {
+					isValidUser();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					System.out.println("IN");
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		private void saveUser() throws FileNotFoundException, IOException
+		{
+			DbUsers.SaveList();
+		}
+		
+		private boolean isValidUser() throws Exception
+		{
+			System.out.println(txpPassword.getSelectedText());
+			Validator valid = new Validator(DbUsers.getUsers());
+			
+			if( !valid.isValidId(newUser.getIdNumber()) && !valid.isValidEmail(newUser.getEmail())
+					&& !valid.isValidPhoneNumber(newUser.getTel()) && !valid.isValidNewUser(newUser))
+				return false;
+			
+			return true;
+		}
+		
+		private void CreateUser()
+		{
+			newUser.setName(txtUsername.getText());
+			newUser.setIdNumber(txtIdNumber.getText());
+			newUser.setEmail(txtEmail.getText());
+			newUser.setTel(txtPhone.getText());
+			newUser.setPassword(txpPassword.getSelectedText());
 		}
 		
 	}
