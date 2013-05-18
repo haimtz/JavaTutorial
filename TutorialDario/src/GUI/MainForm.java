@@ -215,9 +215,10 @@ public class MainForm extends JFrame {
 			Validator valid = new Validator(DbUsers.getUsers());
 			
 			valid.isValidNewUser(newUser);
-			//valid.isValidId(newUser.getIdNumber());
+			valid.isValidId(newUser.getIdNumber());
 			valid.isValidEmail(newUser.getEmail());
-			//valid.isValidPhoneNumber(newUser.getTel());
+			valid.isValidPhoneNumber(newUser.getTel());
+			valid.isValidPassword(String.copyValueOf(txpPassword.getPassword()));
 		}
 		
 		private void CreateUser()

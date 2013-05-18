@@ -66,13 +66,13 @@ public class Validator {
 			if(checkUser.equals(user))
 				throw new InvalidUserException("The User is exist");
 			
-			if(checkUser.getName() == user.getName())
+			if(checkUser.getName().compareTo(user.getName()) == 0)
 				throw new InvalidUserException("The Username is exist");
 			
-			if(checkUser.getEmail() == user.getEmail())
+			if(checkUser.getEmail().compareTo(user.getEmail()) == 0)
 				throw new InvalidUserException("The User Email is exist");
 			
-			if(checkUser.getTel() == user.getTel())
+			if(checkUser.getTel().compareTo(user.getTel()) == 0)
 				throw new InvalidUserException("The User Phone is exist");
 		}
 		//return true;
