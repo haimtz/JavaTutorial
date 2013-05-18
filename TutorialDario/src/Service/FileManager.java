@@ -1,5 +1,6 @@
 package Service;
 
+import java.util.List;
 import java.io.*;
 
 import model.*;
@@ -41,29 +42,28 @@ public class FileManager
 		
 	}
 	
-	public < T extends User >  T readObject() throws FileNotFoundException, IOException, ClassNotFoundException
+	public <T extends User>  List<T> readObject() throws FileNotFoundException, IOException, ClassNotFoundException
 	{
-		T obj = null;
-		ObjectInputStream inputObj;
+		List<T> obj = null;
+		ObjectInputStream inputObj = new ObjectInputStream(new FileInputStream(FILE_NAME));
 		
 		try{
-			inputObj = new ObjectInputStream(new FileInputStream(FILE_NAME));
 			
 			while(true)
 			{
-				obj = (T)inputObj.readObject();
-				inputObj.close();
+				obj = (List<T>)inputObj.readObject();
 			}
 			
 		}
 		catch (EOFException endOfFileException )
 		{
-			
+			inputObj.close();
 		}
 		catch(FileNotFoundException ex)
 		{
 			return null;
 		}
+		
 		
 		return obj;
 	}
