@@ -2,6 +2,7 @@ package model;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.LinkedList;
 import java.util.List;
 
 import Service.FileManager;
@@ -21,6 +22,8 @@ public class DBUsers {
 	{
 		if(myFile.isExistingFile())
 			users = (List<User>)myFile.readObject();
+		else
+			users = new LinkedList<User>();
 	}
 
 	public List<User> getUsers() {
@@ -30,6 +33,11 @@ public class DBUsers {
 	public void SaveList() throws FileNotFoundException, IOException
 	{
 		myFile.writeObject(users);
+	}
+	
+	public void addUser(User user)
+	{
+		users.add(user);
 	}
 	
 }

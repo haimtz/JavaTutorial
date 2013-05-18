@@ -43,7 +43,6 @@ public class Validator {
 				}
 			}
 			
-			System.out.println("Valid Func: " + sum);
 			if(sum % 10 != 0 )
 				throw new InvalidUserIDException("ID Number is not valid");
 			
@@ -57,10 +56,10 @@ public class Validator {
 	 * @return
 	 * @throws InvalidUserException
 	 */
-	public boolean isValidNewUser(User user) throws InvalidUserException
+	public void isValidNewUser(User user) throws InvalidUserException
 	{
 		if(users == null || users.isEmpty())
-			return true;
+			return;
 		
 		for(User checkUser : users)
 		{
@@ -76,7 +75,7 @@ public class Validator {
 			if(checkUser.getTel() == user.getTel())
 				throw new InvalidUserException("The User Phone is exist");
 		}
-		return true;
+		//return true;
 	}
 	
 	public boolean isValidEmail(String email) throws InvalidEmailAddressException
@@ -91,10 +90,21 @@ public class Validator {
 	
 	public boolean isValidPhoneNumber(String phone) throws InvalidTelNumberFormatException
 	{
-		String reg = "^0(([57]\\d)|[23489])-[2-9]\\d{6}$";
+		String reg = "^0(([57]\\d)|[23489])-?[2-9]\\d{6}$";
 		
 		if(!phone.matches(reg))
 			throw new InvalidTelNumberFormatException("The Phone number is not valid");
+		
+		return true;
+	}
+	
+	public boolean isValidPassword(String password) throws InvalidPassword
+	{
+		if(password.length() < 6 )
+			throw new InvalidPassword("Password is too short");
+		
+		if(password.length() > 20)
+			throw new InvalidPassword("Password is too long");
 		
 		return true;
 	}

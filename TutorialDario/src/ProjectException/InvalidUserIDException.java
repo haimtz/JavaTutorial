@@ -1,22 +1,13 @@
 package ProjectException;
 
 public class InvalidUserIDException extends Exception {
-
-	//private static final long serialVersionUID = 1L;
-	private String Message;
 	
 	public InvalidUserIDException() {
-		 this.Message = "Unknown";
+		 super();
 	}
 
 	public InvalidUserIDException(String message) {
 		super(message);
-		this.Message = message;
-	}
-	
-	public String getMessage()
-	{
-		return Message;
 	}
 
 }

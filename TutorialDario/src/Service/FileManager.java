@@ -17,40 +17,45 @@ public class FileManager
 	
 	/***
 	 * write the object into file
-	 * @param obj
+	 * @param users
 	 * @throws FileNotFoundException
 	 * @throws IOException
 	 */
-	public void writeObject(Object obj) throws FileNotFoundException, IOException
+	public void writeObject(List<User> users) throws FileNotFoundException, IOException
 	{
 		// check if object is null
-		if(obj == null)
+		if(users == null)
 			throw new NullPointerException("Null Object");
 		
 		ObjectOutputStream outputObj;
 		
 		try{
 			outputObj = new ObjectOutputStream(new FileOutputStream(FILE_NAME));
-			outputObj.writeObject(obj);
+			outputObj.writeObject(users);
 			outputObj.close();
 			
 		}
 		catch(Exception ex)
 		{
+			ex.getMessage();
+			System.out.println("IN");
 		}
 		
 	}
 	
-	public <T extends User>  List<T> readObject() throws FileNotFoundException, IOException, ClassNotFoundException
+	public  List<User> readObject() throws FileNotFoundException, IOException, ClassNotFoundException
 	{
-		List<T> obj = null;
+		if(!isExistingFile())
+			return null;
+		
+		List<User> obj = null;
 		ObjectInputStream inputObj = new ObjectInputStream(new FileInputStream(FILE_NAME));
 		
 		try{
 			
 			while(true)
 			{
-				obj = (List<T>)inputObj.readObject();
+				obj = (List<User>)inputObj.readObject();
 			}
 			
 		}

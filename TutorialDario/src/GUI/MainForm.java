@@ -11,6 +11,7 @@ import javax.swing.GroupLayout.Alignment;
 import javax.swing.GroupLayout.Group;
 
 import ProjectException.InvalidEmailAddressException;
+import ProjectException.InvalidPassword;
 import ProjectException.InvalidTelNumberFormatException;
 import ProjectException.InvalidUserException;
 import ProjectException.InvalidUserIDException;
@@ -172,12 +173,6 @@ public class MainForm extends JFrame {
 			
 			if(event.getActionCommand() == "Close")
 			{
-				try {
-					saveUser();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
 				dispose();
 			}
 			
@@ -186,30 +181,43 @@ public class MainForm extends JFrame {
 				newUser = new User();
 				CreateUser();
 				try {
-					isValidUser();
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					System.out.println("IN");
-					e.printStackTrace();
+					
+					checkPassword();
+					ValidUser();
+					saveUser();
+					
+					// Clear Controls
+					txtUsername.setText("");
+					txtIdNumber.setText("");
+					txtEmail.setText("");
+					txtPhone.setText("");
+					
+					txpConfirm.setText("");
+					txpPassword.setText("");
 				}
+				catch(Exception e)
+				{
+					JOptionPane.showMessageDialog(MainForm.this, e.getMessage());
+				}
+				
 			}
 		}
 		
 		private void saveUser() throws FileNotFoundException, IOException
 		{
+			DbUsers.addUser(newUser);
 			DbUsers.SaveList();
 		}
 		
-		private boolean isValidUser() throws Exception
+		private void ValidUser() throws Exception
 		{
-			System.out.println(txpPassword.getSelectedText());
+			
 			Validator valid = new Validator(DbUsers.getUsers());
 			
-			if( !valid.isValidId(newUser.getIdNumber()) && !valid.isValidEmail(newUser.getEmail())
-					&& !valid.isValidPhoneNumber(newUser.getTel()) && !valid.isValidNewUser(newUser))
-				return false;
-			
-			return true;
+			valid.isValidNewUser(newUser);
+			//valid.isValidId(newUser.getIdNumber());
+			valid.isValidEmail(newUser.getEmail());
+			//valid.isValidPhoneNumber(newUser.getTel());
 		}
 		
 		private void CreateUser()
@@ -218,7 +226,16 @@ public class MainForm extends JFrame {
 			newUser.setIdNumber(txtIdNumber.getText());
 			newUser.setEmail(txtEmail.getText());
 			newUser.setTel(txtPhone.getText());
-			newUser.setPassword(txpPassword.getSelectedText());
+			newUser.setPassword(String.copyValueOf(txpPassword.getPassword()));
+		}
+		
+		private void checkPassword() throws InvalidPassword
+		{
+			String password = String.copyValueOf(txpPassword.getPassword());
+			String confirm = String.copyValueOf(txpConfirm.getPassword());
+			
+			if(password.compareTo(confirm) != 0)
+				throw new InvalidPassword("The confirm Dont mach to password");
 		}
 		
 	}

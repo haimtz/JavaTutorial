@@ -1,19 +1,14 @@
 package ProjectException;
 
 public class InvalidUserException extends Exception {
-
-	private String massage;
+	
 	public InvalidUserException()
 	{
-		massage = "Unknown";
+		super();
 	}
 	
-	public InvalidUserException(String msg)
+	public InvalidUserException(String massage)
 	{
-		massage = msg;
-	}
-
-	public String getMassage() {
-		return massage;
+		super(massage);
 	}	
 }
