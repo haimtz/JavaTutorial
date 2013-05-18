@@ -191,9 +191,11 @@ public class MainForm extends JFrame {
 					txtIdNumber.setText("");
 					txtEmail.setText("");
 					txtPhone.setText("");
-					
 					txpConfirm.setText("");
 					txpPassword.setText("");
+					
+					// confirm Message
+					JOptionPane.showMessageDialog(MainForm.this, "User add successfully");
 				}
 				catch(Exception e)
 				{
