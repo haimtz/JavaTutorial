@@ -9,26 +9,22 @@ public class Validator {
 	
 	private List<User> users;
 	
+	public Validator(){	}
+	
 	public Validator(List<User> users)
 	{
 		this.users = users;
 	}
 	
-	/**
-	 * Check if id number is valid by Israeli law
-	 * @param idNumber
-	 * @throws Throwable 
-	 * @throws Stam 
-	 */
-	public boolean isValidId(String idNumber) throws InvalidUserIDException
+	public void ValidId(String idNumber) throws UserIDException
 	{
 		// check if length of id is valid
 		if(idNumber.length() != 9)
-			throw new InvalidUserIDException("Missing Or to many numbers in the ID number");
+			throw new UserIDException("Missing Or to many numbers in the ID number");
 		
 		// if not number only throw Exception
 		if(!idNumber.matches("[0-9]{9,9}"))
-			throw new InvalidUserIDException("Mast to be digit only");
+			throw new UserIDException("Mast to be digit only");
 			
 			int sum = 0;		
 			for(int index = 0 ; index < idNumber.length() ; index++)
@@ -44,68 +40,58 @@ public class Validator {
 			}
 			
 			if(sum % 10 != 0 )
-				throw new InvalidUserIDException("ID Number is not valid");
-			
-			return true;
+				throw new UserIDException("ID Number is not valid");
 	}
 	
-	/**
-	 * Check if the user is exist or one of the parameters
-	 * @param users
-	 * @param user
-	 * @return
-	 * @throws InvalidUserException
-	 */
-	public void isValidNewUser(User user) throws InvalidUserException
+	public void ValidNewUser(User user) throws UserException, EmailAddressException, TelNumberException
 	{
-		if(users == null || users.isEmpty())
-			return;
 		
 		for(User checkUser : users)
 		{
 			if(checkUser.equals(user))
-				throw new InvalidUserException("The User is exist");
+				throw new UserException("The User is exist");
 			
 			if(checkUser.getName().compareTo(user.getName()) == 0)
-				throw new InvalidUserException("The Username is exist");
+				throw new UserException("The Username is exist");
 			
 			if(checkUser.getEmail().compareTo(user.getEmail()) == 0)
-				throw new InvalidUserException("The User Email is exist");
+				throw new EmailAddressException("The User Email is exist");
 			
 			if(checkUser.getTel().compareTo(user.getTel()) == 0)
-				throw new InvalidUserException("The User Phone is exist");
+				throw new TelNumberException("The User Phone is exist");
 		}
-		//return true;
 	}
 	
-	public boolean isValidEmail(String email) throws InvalidEmailAddressException
+	public void ValidEmail(String email) throws EmailAddressException
 	{
 		String reg = "([a-zA-Z0-9]+([\\.+_-][a-zA-Z0-9]+)*)@(([a-zA-Z0-9]+((\\.|[-]{1,2})[a-zA-Z0-9]+)*)\\.[a-zA-Z]{2,6})";
 		
 		if(!email.matches(reg))
-			throw new InvalidEmailAddressException("The currect Email format\n user@domain.com");
-		
-		return true;
+			throw new EmailAddressException("The currect Email format\n user@domain.com");
 	}
 	
-	public boolean isValidPhoneNumber(String phone) throws InvalidTelNumberFormatException
+	public void ValidPhoneNumber(String phone) throws TelNumberException
 	{
 		String reg = "^0(([57]\\d)|[23489])-?[2-9]\\d{6}$";
 		
 		if(!phone.matches(reg))
-			throw new InvalidTelNumberFormatException("The Phone number is not valid");
-		
-		return true;
+			throw new TelNumberException("The Phone number is not valid");
 	}
 	
-	public boolean isValidPassword(String password) throws InvalidPassword
+	public void ValidPassword(String password) throws UserPasswordException
 	{
-		if(password.length() < 6 )
-			throw new InvalidPassword("Password is too short");
+		if(password.length() < 6 || password.length() > 20 )
+			throw new UserPasswordException("Password have to be 6-20 characters");
 		
-		if(password.length() > 20)
-			throw new InvalidPassword("Password is too long");
+		if(password.contains(" "))
+			throw new UserPasswordException("Password cat not be with spaces!!");
+	}
+	
+	public void ValidUserName(String name) throws UserNameException
+	{
+		String reg = "^[A-Za-z0-9]+(?:[ _-][A-Za-z0-9]+)*$";
 		
-		return true;
+		if(!name.matches(reg))
+			throw new UserNameException("The user name must start with a letter\nand then you can put Numbers");
 	}
 }

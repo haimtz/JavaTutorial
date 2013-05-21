@@ -1,6 +1,11 @@
 package GUI;
 
 import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileNotFoundException;
@@ -10,11 +15,12 @@ import javax.swing.*;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.GroupLayout.Group;
 
-import ProjectException.InvalidEmailAddressException;
-import ProjectException.InvalidPassword;
-import ProjectException.InvalidTelNumberFormatException;
-import ProjectException.InvalidUserException;
-import ProjectException.InvalidUserIDException;
+import ProjectException.EmailAddressException;
+import ProjectException.TelNumberException;
+import ProjectException.UserException;
+import ProjectException.UserIDException;
+import ProjectException.UserNameException;
+import ProjectException.UserPasswordException;
 import Service.Validator;
 
 import model.DBUsers;
@@ -22,7 +28,7 @@ import model.User;
 
 public class MainForm extends JFrame {
 	
-	private GroupLayout layout;
+	private GridBagConstraints gbc;
 	private DBUsers DbUsers;
 	
 	// define Labels
@@ -49,22 +55,25 @@ public class MainForm extends JFrame {
 	public MainForm(DBUsers users)
 	{
 		super("Add USer");
-		DbUsers = users;
-		layout = new GroupLayout(getContentPane());
-		getContentPane().setLayout(layout);
-		
 		init();
+		DbUsers = users;		
+		this.setLayout(new GridBagLayout());
+		setSize(1500, 1600);
+		
 		setComponents();
 		
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		setSize(400, 600);
+		
 		setVisible(true);
+		setResizable(false);
 		pack();
 		
 	}
 	
 	private void init()
 	{
+		gbc = new GridBagConstraints();
+		gbc.insets = new Insets(5, 5, 5, 5);
 		// Initialization Label
 		lblUsername = new JLabel("Username:");
 		lblIdnumber = new JLabel("ID number:");
@@ -92,87 +101,78 @@ public class MainForm extends JFrame {
 	
 	private void setComponents()
 	{
-		layout.setHorizontalGroup(
-	            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-	            .addGroup(layout.createSequentialGroup()
-	                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-	                    .addGroup(layout.createSequentialGroup()
-	                        .addComponent(lblConfirmPass)
-	                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-	                        .addComponent(txpConfirm, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE))
-	                    .addGroup(layout.createSequentialGroup()
-	                        .addContainerGap()
-	                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-	                            .addGroup(layout.createSequentialGroup()
-	                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-	                                    .addGroup(layout.createSequentialGroup()
-	                                        .addComponent(lblPassword)
-	                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-	                                        .addComponent(txpPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE))
-	                                    .addComponent(lblEmail)
-	                                    .addGroup(layout.createSequentialGroup()
-	                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-	                                            .addComponent(lblUsername)
-	                                            .addComponent(lblIdnumber)
-	                                            .addComponent(lblPhone))
-	                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-	                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-	                                            .addComponent(txtPhone, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-	                                            .addComponent(txtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-	                                            .addComponent(txtUsername, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-	                                            .addComponent(txtIdNumber, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-	                                .addGap(0, 0, Short.MAX_VALUE))
-	                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-	                                .addGap(0, 0, Short.MAX_VALUE)
-	                                .addComponent(butCreate)
-	                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-	                                .addComponent(butClose)))))
-	                .addContainerGap())
-	        );
+		// Username
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		add(lblUsername, gbc);
+		gbc.gridx = 1;
+		gbc.gridy = 0;
+		add(txtUsername, gbc);
 		
-	        layout.setVerticalGroup(
-	            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-	            .addGroup(layout.createSequentialGroup()
-	                .addContainerGap()
-	                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-	                    .addComponent(lblUsername)
-	                    .addComponent(txtUsername, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-	                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-	                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-	                    .addComponent(lblIdnumber)
-	                    .addComponent(txtIdNumber, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-	                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-	                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-	                    .addComponent(lblEmail)
-	                    .addComponent(txtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-	                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-	                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-	                    .addComponent(lblPhone)
-	                    .addComponent(txtPhone, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-	                .addGap(25, 25, 25)
-	                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-	                    .addComponent(lblPassword)
-	                    .addComponent(txpPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-	                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-	                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-	                    .addComponent(lblConfirmPass)
-	                    .addComponent(txpConfirm, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-	                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
-	                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-	                    .addComponent(butClose)
-	                    .addComponent(butCreate))
-	                .addContainerGap())
-	        );
+		// Id number
+		gbc.gridx = 0;
+		gbc.gridy = 1;
+		add(lblIdnumber, gbc);
+		gbc.gridx = 1;
+		gbc.gridy = 1;
+		add(txtIdNumber, gbc);
+		
+		// email
+		gbc.gridx = 0;
+		gbc.gridy = 2;
+		add(lblEmail, gbc);
+		gbc.gridx = 1;
+		gbc.gridy = 2;
+		add(txtEmail, gbc);
+		
+		
+		// phone number
+		gbc.gridx = 0;
+		gbc.gridy = 3;
+		add(lblPhone, gbc);
+		gbc.gridx = 1;
+		gbc.gridy = 3;
+		add(txtPhone,gbc);
+		
+		// password
+		gbc.gridx = 0;
+		gbc.gridy = 4;
+		add(lblPassword,gbc);
+		gbc.gridx = 1;
+		gbc.gridy = 4;
+		add(txpPassword,gbc);
+		
+		// confirm password
+		gbc.gridx = 0;
+		gbc.gridy = 5;
+		add(lblConfirmPass, gbc);
+		gbc.gridx = 1;
+		gbc.gridy = 5;
+		add(txpConfirm,gbc);
+		
+		// buttons
+		gbc.gridx = 0;
+		gbc.gridy = 6;
+		add(butCreate, gbc);
+		
+		gbc.gridx = 1;
+		gbc.gridy = 6;
+		add(butClose,gbc);
+		
 	}
 
 	private class ButtonHandler implements ActionListener
 	{
 		private User newUser;
+		private boolean isSaved;
 		@Override
-		public void actionPerformed(ActionEvent event) {
+		public void actionPerformed(ActionEvent event) 
+		{
 			
 			if(event.getActionCommand() == "Close")
 			{
+				if(!isSaved)
+					JOptionPane.showMessageDialog(MainForm.this, "User didnot save!!");
 				dispose();
 			}
 			
@@ -193,6 +193,7 @@ public class MainForm extends JFrame {
 					txtPhone.setText("");
 					txpConfirm.setText("");
 					txpPassword.setText("");
+					isSaved = true;
 					
 					// confirm Message
 					JOptionPane.showMessageDialog(MainForm.this, "User add successfully");
@@ -209,18 +210,22 @@ public class MainForm extends JFrame {
 		{
 			DbUsers.addUser(newUser);
 			DbUsers.SaveList();
+			isSaved = false;
 		}
 		
-		private void ValidUser() throws Exception
+		private void ValidUser() throws UserException, UserNameException, 
+										UserIDException, EmailAddressException,
+										TelNumberException, UserPasswordException
 		{
 			
 			Validator valid = new Validator(DbUsers.getUsers());
 			
-			valid.isValidNewUser(newUser);
-			valid.isValidId(newUser.getIdNumber());
-			valid.isValidEmail(newUser.getEmail());
-			valid.isValidPhoneNumber(newUser.getTel());
-			valid.isValidPassword(String.copyValueOf(txpPassword.getPassword()));
+			valid.ValidNewUser(newUser);
+			valid.ValidUserName(newUser.getName());
+			valid.ValidId(newUser.getIdNumber());
+			valid.ValidEmail(newUser.getEmail());
+			valid.ValidPhoneNumber(newUser.getTel());
+			valid.ValidPassword(String.copyValueOf(txpPassword.getPassword()));
 		}
 		
 		private void CreateUser()
@@ -232,13 +237,13 @@ public class MainForm extends JFrame {
 			newUser.setPassword(String.copyValueOf(txpPassword.getPassword()));
 		}
 		
-		private void checkPassword() throws InvalidPassword
+		private void checkPassword() throws UserPasswordException
 		{
 			String password = String.copyValueOf(txpPassword.getPassword());
 			String confirm = String.copyValueOf(txpConfirm.getPassword());
 			
 			if(password.compareTo(confirm) != 0)
-				throw new InvalidPassword("The confirm Dont mach to password");
+				throw new UserPasswordException("The confirm Dont mach to password");
 		}
 		
 	}
