@@ -39,7 +39,7 @@ public class Validator {
 				}
 			}
 			
-			if(sum % 10 != 0 )
+			if(sum == 0 || sum % 10 != 0 )
 				throw new UserIDException("ID Number is not valid");
 	}
 	
