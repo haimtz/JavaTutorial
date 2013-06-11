@@ -10,6 +10,7 @@ public class User implements Serializable{
 	private String Email;
 	private String Tel;
 	private String Password;
+	private String TESTING;
 	
 	//Contractor
 	public User()
